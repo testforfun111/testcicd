@@ -81,10 +81,10 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/postgres
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache 
-
+  
       - name: Build and Push Docker Frontend
         uses: docker/build-push-action@v2
-        id: docker_build4
+        id: docker_build5
         with:
           context: ./
           file: ./Dockerfile.frontend
