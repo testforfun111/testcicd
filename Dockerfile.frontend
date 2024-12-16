@@ -14,7 +14,7 @@ RUN npm install
 COPY frontend/ .
 
 # Bước 6: Build ứng dụng frontend (hoặc `npm run build` nếu bạn cần build ứng dụng)
-RUN npm run build
+RUN npm run dev
 
 # Bước 7: Mở cổng mà ứng dụng frontend sẽ chạy
 EXPOSE 3000
