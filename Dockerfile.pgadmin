@@ -1,0 +1,12 @@
+# Sử dụng image pgAdmin chính thức làm base image
+FROM dpage/pgadmin4
+
+# Cấu hình môi trường cho pgAdmin
+ENV PGADMIN_DEFAULT_EMAIL=pg@admin.com
+ENV PGADMIN_DEFAULT_PASSWORD=aaa
+
+# Cấu hình cổng mà pgAdmin sẽ lắng nghe (mặc định là 80)
+# ENV PGADMIN_LISTEN_PORT=5050
+
+# Expose cổng 80 (nghe trên cổng 5050 trên máy chủ)
+EXPOSE 80
