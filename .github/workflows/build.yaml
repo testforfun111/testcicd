@@ -8,111 +8,91 @@ on:
     branches:
       - main
 
+
 jobs:
-  build-backend:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest  # Chạy trên môi trường Ubuntu của GitHub Actions
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3  # Lấy mã nguồn từ repository
 
-    - name: Login Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-        
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v1
-      id: buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2  # Cấu hình Docker Buildx
 
-    - name: Build and Push Docker Image
-      uses: docker/setup-buildx-action@v2
-      id: docker_build
-      with:
-        context: ./
-        file: ./Dockerfile
-        builder: ${{ steps.buildx.outputs.name }}
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/test
-      
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0'
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}  # Docker Hub username từ GitHub Secrets
+          password: ${{ secrets.DOCKER_PASSWORD }}  # Docker Hub password từ GitHub Secrets
 
-    - name: Publish backend
-      run: |
-        dotnet publish WebApplication1/WebApplication1.csproj -c Release -o srcPublish
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }} .  # Build Docker image
+          docker push ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}  # Push image lên Docker Hub
 
-    - name: Upload backend artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: backend-artifacts
-        path: srcPublish
+  # build-frontend:
+  #   runs-on: ubuntu-latest
 
-  build-frontend:
-    runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+  #   - name: Set up Node.js
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: '14'
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '14'
+  #   - name: Install dependencies
+  #     run: |
+  #       cd frontend
+  #       npm install
 
-    - name: Install dependencies
-      run: |
-        cd frontend
-        npm install
+  #   - name: Build frontend
+  #     run: |
+  #       cd frontend
+  #       npm run dev
 
-    - name: Build frontend
-      run: |
-        cd frontend
-        npm run dev
+  # test-frontend:
+  #   runs-on: ubuntu-latest
 
-  test-frontend:
-    runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+  #   - name: Set up Node.js
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: '14'
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '14'
+  #   - name: Install dependencies
+  #     run: |
+  #       cd frontend
+  #       npm install
 
-    - name: Install dependencies
-      run: |
-        cd frontend
-        npm install
+  #   - name: Run tests
+  #     run: |
+  #       cd frontend
+  #       npx jest --config jest.config.cjs
 
-    - name: Run tests
-      run: |
-        cd frontend
-        npx jest --config jest.config.cjs
+  # deploy-backend:
+  #   runs-on: ubuntu-latest
 
-  deploy-backend:
-    runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+  #   - name: Deploy backend
+  #     run: |
+  #       bash scripts/deploy-backend.sh
 
-    - name: Deploy backend
-      run: |
-        bash scripts/deploy-backend.sh
+  # deploy-frontend:
+  #   runs-on: ubuntu-latest
 
-  deploy-frontend:
-    runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Deploy frontend
-      run: |
-        bash scripts/deploy-frontend.sh
+  #   - name: Deploy frontend
+  #     run: |
+  #       bash scripts/deploy-frontend.sh
