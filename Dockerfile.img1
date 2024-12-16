@@ -1,16 +1,13 @@
-# Sử dụng image NGINX chính thức làm base image
-FROM nginx:alpine
+# Sử dụng image nginx-extras chính thức làm base image
+FROM byjg/nginx-extras
 
-# Xoá cấu hình mặc định của NGINX
-RUN rm /etc/nginx/conf.d/default.conf
+# Cấu hình NGINX (sao chép file nginx.conf tùy chỉnh)
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
-# Sao chép cấu hình NGINX tùy chỉnh vào container
-COPY nginx.conf /etc/nginx/nginx.conf
+# Sao chép các file tĩnh vào thư mục phục vụ của NGINX
+COPY ./static /static
 
-# Sao chép các file tĩnh của Web API hoặc ứng dụng vào thư mục của NGINX
-COPY ./public /usr/share/nginx/html
-
-# Mở cổng 80 để phục vụ HTTP
+# Mở cổng 80 cho ứng dụng NGINX
 EXPOSE 80
 
 # Khởi chạy NGINX khi container được chạy
