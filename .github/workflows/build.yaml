@@ -120,24 +120,41 @@ jobs:
         cd frontend
         npx jest --config jest.config.cjs
 
-  # deploy-backend:
-  #   runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  # Ensure deployment happens after the build job
 
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v3
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-  #   - name: Deploy backend
-  #     run: |
-  #       bash scripts/deploy-backend.sh
+      - name: Docker Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-  # deploy-frontend:
-  #   runs-on: ubuntu-latest
+      - name: Deploy Docker WebAPI
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/api:latest
+          docker run -d -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/api:latest
 
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v3
+      - name: Deploy Docker NGINX
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest
+          docker run -d -p 8080:80 ${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest
 
-  #   - name: Deploy frontend
-  #     run: |
-  #       bash scripts/deploy-frontend.sh
+      - name: Deploy Docker PgAdmin
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pgadmin:latest
+          docker run -d -p 5050:80 ${{ secrets.DOCKERHUB_USERNAME }}/pgadmin:latest
+
+      - name: Deploy Docker Postgres
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/postgres:latest
+          docker run -d -p 5432:5432 ${{ secrets.DOCKERHUB_USERNAME }}/postgres:latest
+
+      - name: Deploy Docker Frontend
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+          docker run -d -p 3000:80 ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
