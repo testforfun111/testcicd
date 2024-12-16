@@ -26,41 +26,42 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME  }}  # Docker Hub username từ GitHub Secrets
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN  }}  # Docker Hub password từ GitHub Secrets
 
-      - name: Cache Docker Image Layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      - name: Set up Docker Compose
+        run: |
+          curl -L https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
 
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        id: docker_build
-        with:
-          context: ./
-          file: ./Dockerfile
-          builder: ${{ steps.buildx.outputs.name }}
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Build and Push Docker Image with Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml build  # Build images từ docker-compose.yml
+          docker-compose -f docker-compose.yml push  # Push image lên Docker Hub
 
-      - name: Verify
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Verify Build
+        run: echo "Docker Compose build and push complete"
+        
+      # - name: Cache Docker Image Layers
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-
 
-      - name: Deploy Docker Image to Local Server
-        uses: appleboy/ssh-action@v0.1.5  # Sử dụng SSH Action của Appleboy
-        with:
-          host: ${{ secrets.SERVER_HOST }}  # Địa chỉ IP của máy chủ local
-          username: ${{ secrets.SERVER_USERNAME }}  # Username trên máy chủ local
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # SSH private key từ GitHub Secrets
-          port: 22  # Cổng SSH (mặc định là 22)
-          script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld:latest  # Kéo image từ Docker Hub
-            docker stop flask-helloworld || true  # Dừng container cũ nếu có
-            docker rm flask-helloworld || true  # Xóa container cũ nếu có
-            docker run -d --name flask-helloworld -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld:latest  # Khởi động container mới
+      # - name: Build and Push Docker Image
+      #   uses: docker/build-push-action@v2
+      #   id: docker_build
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld
+      #     cache-from: type=local,src=/tmp/.buildx-cache
+      #     cache-to: type=local,dest=/tmp/.buildx-cache
+
+      # - name: Verify
+      #   run: echo ${{ steps.docker_build.outputs.digest }}
+
 
   # build-frontend:
   #   runs-on: ubuntu-latest
