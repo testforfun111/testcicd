@@ -1,0 +1,13 @@
+# Sử dụng image chính thức của PostgreSQL làm base image
+FROM postgres
+
+# Cấu hình môi trường (tạo user, password, và database)
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=12345678
+ENV POSTGRES_DB=mystore
+
+# Khởi tạo volume cho dữ liệu (có thể cấu hình ở Docker Compose)
+VOLUME /var/lib/postgresql/data
+
+# Expose cổng 5432 cho PostgreSQL
+EXPOSE 5432
