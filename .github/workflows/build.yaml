@@ -81,55 +81,44 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/postgres
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache 
-        
+
+      - name: Build and Push Docker Frontend
+        uses: docker/build-push-action@v2
+        id: docker_build4
+        with:
+          context: ./
+          file: ./Dockerfile.frontend
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache 
+          
       - name: Verify
         run: echo ${{ steps.docker_build.outputs.digest }}
       
 
+  test-frontend:
+    runs-on: ubuntu-latest
 
-  # build-frontend:
-  #   runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
 
-  #   - name: Set up Node.js
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       node-version: '14'
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm install
 
-  #   - name: Install dependencies
-  #     run: |
-  #       cd frontend
-  #       npm install
-
-  #   - name: Build frontend
-  #     run: |
-  #       cd frontend
-  #       npm run dev
-
-  # test-frontend:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v3
-
-  #   - name: Set up Node.js
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       node-version: '14'
-
-  #   - name: Install dependencies
-  #     run: |
-  #       cd frontend
-  #       npm install
-
-  #   - name: Run tests
-  #     run: |
-  #       cd frontend
-  #       npx jest --config jest.config.cjs
+    - name: Run tests
+      run: |
+        cd frontend
+        npx jest --config jest.config.cjs
 
   # deploy-backend:
   #   runs-on: ubuntu-latest
