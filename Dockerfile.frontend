@@ -1,0 +1,23 @@
+# Bước 1: Sử dụng image Node.js chính thức làm base image
+FROM node:14
+
+# Bước 2: Cài đặt thư mục làm việc trong container
+WORKDIR /app
+
+# Bước 3: Sao chép package.json và package-lock.json (hoặc yarn.lock nếu bạn dùng Yarn)
+COPY frontend/package.json frontend/package-lock.json ./
+
+# Bước 4: Cài đặt các dependencies cho frontend
+RUN npm install
+
+# Bước 5: Sao chép toàn bộ mã nguồn frontend vào container
+COPY frontend/ .
+
+# Bước 6: Build ứng dụng frontend (hoặc `npm run build` nếu bạn cần build ứng dụng)
+RUN npm run build
+
+# Bước 7: Mở cổng mà ứng dụng frontend sẽ chạy
+EXPOSE 3000
+
+# Bước 8: Chạy ứng dụng frontend (hoặc có thể là `npm run start` nếu muốn chạy ở chế độ production)
+CMD ["npm", "run", "start"]
