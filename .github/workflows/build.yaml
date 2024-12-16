@@ -1,20 +1,93 @@
-name: CI/CD Workflow
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main
-  pull_request:
+      - main # Chạy workflow khi có push lên nhánh main
+  pull_request: # Chạy workflow khi tạo pull request
     branches:
       - main
 
 jobs:
-  build:
+  # Step 1: Build Backend
+  build-backend:
     runs-on: ubuntu-latest
-
     steps:
-      # Bước 1: Checkout code từ repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-  
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.0" # Thay bằng phiên bản .NET phù hợp với project
+
+      - name: Restore dependencies
+        run: dotnet restore ./WebApplication1/WebApplication1.sln
+
+      - name: Build backend
+        run: dotnet build ./WebApplication1/WebApplication1.sln --configuration Release --no-restore
+
+  # Step 2: Build Frontend
+  build-frontend:
+    runs-on: ubuntu-latest
+    needs: build-backend # Build frontend sau khi backend hoàn thành
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18" # Thay bằng phiên bản Node.js phù hợp với React project
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run dev
+
+  # Step 3: Run React Tests
+  test-frontend:
+    runs-on: ubuntu-latest
+    needs: build-frontend # Test sau khi frontend đã build xong
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Run tests
+        working-directory: ./frontend
+        run: npm test -- --watchAll=false
+
+  # Step 4: Deploy Backend and Frontend
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build-backend, test-frontend] # Deploy sau khi backend build và frontend test hoàn tất
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Backend Deployment (e.g., Docker or SSH to server)
+      - name: Deploy Backend
+        run: |
+          echo "Deploying Backend..."
+          # Thay dòng này bằng lệnh deploy backend thực tế
+          echo "Deploy logic goes here."
+
+      # Frontend Deployment (e.g., Upload to S3, Firebase, etc.)
+      - name: Deploy Frontend
+        run: |
+          echo "Deploying Frontend..."
+          # Thay dòng này bằng lệnh deploy frontend thực tế
+          echo "Deploy logic goes here."
+
