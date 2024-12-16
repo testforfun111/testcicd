@@ -49,6 +49,19 @@ jobs:
       - name: Verify
         run: echo ${{ steps.docker_build.outputs.digest }}
 
+      - name: Deploy Docker Image to Local Server
+        uses: appleboy/ssh-action@v0.1.5  # Sử dụng SSH Action của Appleboy
+        with:
+          host: ${{ secrets.SERVER_HOST }}  # Địa chỉ IP của máy chủ local
+          username: ${{ secrets.SERVER_USERNAME }}  # Username trên máy chủ local
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # SSH private key từ GitHub Secrets
+          port: 22  # Cổng SSH (mặc định là 22)
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld:latest  # Kéo image từ Docker Hub
+            docker stop flask-helloworld || true  # Dừng container cũ nếu có
+            docker rm flask-helloworld || true  # Xóa container cũ nếu có
+            docker run -d --name flask-helloworld -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld:latest  # Khởi động container mới
+
   # build-frontend:
   #   runs-on: ubuntu-latest
 
