@@ -22,10 +22,10 @@ jobs:
           dotnet-version: "7.0" # Adjust to the appropriate .NET version for your project
   
       - name: Restore dependencies
-        run: dotnet restore ./WebApplication1/WebApplication1.csproj --configuration Release --output /app/build
+        run: dotnet restore ./WebApplication1/WebApplication1.csproj -c Release -o /app/build
   
       - name: Build backend
-        run: dotnet build ./WebApplication1/WebApplication1.csproj --configuration Release --output /app/publish
+        run: dotnet restore ./WebApplication1/WebApplication1.csproj -c Release -o /app/build
 
   # Step 2: Build Frontend
   build-frontend:
