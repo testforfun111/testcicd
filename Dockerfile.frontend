@@ -17,7 +17,7 @@ COPY frontend/ .
 RUN npm run build
 
 # Bước 7: Mở cổng mà ứng dụng frontend sẽ chạy
-EXPOSE 3000
+EXPOSE 3002
 
 # Bước 8: Chạy ứng dụng frontend (hoặc có thể là `npm run start` nếu muốn chạy ở chế độ production)
 CMD ["npm", "run", "start"]
