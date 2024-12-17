@@ -1,5 +1,5 @@
 # Bước 1: Sử dụng image Node.js chính thức làm base image
-FROM node:14
+FROM node:18
 
 # Bước 2: Cài đặt thư mục làm việc trong container
 WORKDIR /app
