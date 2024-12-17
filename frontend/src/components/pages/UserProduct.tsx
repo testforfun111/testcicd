@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { MyButton } from '../UI/MyButton';
 import { MenuHeader } from '../UI/MenuHeader';
 import { ListItem } from '../UI/ListItem';
@@ -14,7 +13,6 @@ import { CartServices } from '../../services/CartServices';
 import { Cart } from '../../interfaces/models/Cart';
 import { ItemCart } from '../../interfaces/models/ItemCart';
 export const UserProduct: React.FC = () => {
-    const navigate = useNavigate();
     const [searchValue, setSearchValue] = useState('');
     const [productId, setProductId] = useState<number>(0);
     const [productName, setProductName] = useState('');
@@ -183,7 +181,7 @@ export const UserProduct: React.FC = () => {
     };
 
     return (
-        <div className="h-screen w-full flex flex-col items-center gap-4 p-4 bg-[#F6ECE7] overflow-hidden">
+        <div className="h-screen w-full flex flex-col items-center gap-4 p-4 bg-[#F6ECE7]">
             <MenuHeader label={currentUser.name || ''} buttons={headerButtons} />
             
             <div className="w-full max-w-7xl flex justify-center mb-2">
@@ -194,8 +192,8 @@ export const UserProduct: React.FC = () => {
                 />
             </div>
 
-            <div className="w-full max-w-8xl flex flex-col lg:flex-row gap-4 h-[calc(100vh-200px)]">
-                <div className="w-full lg:w-1/2 overflow-auto">
+            <div className="w-full max-w-8xl flex flex-col lg:flex-row">
+                {/* <div className="w-full lg:w-1/2 overflow-auto" style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
                     <ListItem 
                         items={items}
                         maxHeight="100%"
@@ -203,9 +201,18 @@ export const UserProduct: React.FC = () => {
                         position="left"
                         className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3"
                     />
+                </div> */}
+                <div className="w-full bg-white rounded-lg shadow-lg p-6">
+                    <ListItem 
+                        items={items}
+                        maxHeight="calc(100vh - 200px)"
+                        maxWidth="100%"
+                        position="left"
+                        className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3"
+                    />
                 </div>
 
-                <div className="w-full lg:w-1/2 flex flex-col gap-3 overflow-auto">
+                <div className="w-full lg:w-1/2 flex flex-col gap-3 overflow-auto" style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
                     <CartTitle 
                         title="Product Information" 
                         width="100%"
@@ -213,14 +220,14 @@ export const UserProduct: React.FC = () => {
                     />
                     
                     <div className="flex flex-col gap-3 bg-[#F56F18] p-4 rounded-lg shadow-md items-center">
-                        <div className="w-[400px] flex flex-col gap-3">
+                        <div className="w-full flex flex-col gap-3">
                             <InputField
                                 label="Product ID"
                                 value={productId.toString()}
                                 onChange={(e) => setProductId(Number(e.target.value))}
                                 type="number"
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                                 disabled={true}
                             />
 
@@ -229,7 +236,7 @@ export const UserProduct: React.FC = () => {
                                 value={productName}
                                 onChange={(e) => setProductName(e.target.value)}
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
                             
                             <InputField
@@ -238,7 +245,7 @@ export const UserProduct: React.FC = () => {
                                 onChange={(e) => setPrice(Number(e.target.value))}
                                 type="number"
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
                             
                             <InputField
@@ -247,7 +254,7 @@ export const UserProduct: React.FC = () => {
                                 onChange={(e) => setQuantity(Number(e.target.value))}
                                 type="number"
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
 
                             <InputField
@@ -255,24 +262,24 @@ export const UserProduct: React.FC = () => {
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
 
                             <div className="flex flex-row gap-2 items-center mt-4">
                                 <MyButton
                                     name="Del"
                                     onClick={() => handleRemoveFromCart(productId.toString())}
-                                    width="200px"
+                                    width="100%"
                                 />
 
-                                <div className="text-white w-[200px]  flex justify-center text-lg font-bold my-2">
+                                <div className="text-white w-full  flex justify-center text-lg font-bold my-2">
                                     In Cart: {cartItemCount}
                                 </div>
 
                                 <MyButton
                                     name="Add"
                                     onClick={() => handleAddToCart(productId.toString())} 
-                                    width="200px"
+                                    width="100%"
                                 />
                             </div>
                         </div>

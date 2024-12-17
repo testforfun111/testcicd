@@ -17,7 +17,7 @@ interface ListItemOrderProps {
 export const ListItemOrder: React.FC<ListItemOrderProps> = ({
     items = [],
     maxHeight = "500px",
-    maxWidth = "1200px",
+    maxWidth = "100%",
     position = "center",
     className = ''
 }) => {
@@ -40,11 +40,11 @@ export const ListItemOrder: React.FC<ListItemOrderProps> = ({
             className={`flex flex-col overflow-y-auto ${positionClasses[position as keyof typeof positionClasses]} ${className}`}
             style={{ maxHeight, maxWidth }}
         >
-            <div className="grid grid-cols-4 gap-8 px-4 py-3 bg-gray-100 font-bold text-lg">
+            <div className="flex flex-row justify-between items-center px-4 py-3 bg-gray-100 font-bold text-lg">
                 <div>Item</div>
-                <div className="ml-[10px]">Name</div>
-                <div className="ml-[10px]">Quantity</div>
-                <div className="ml-[10px]">Price</div>
+                <div>Name</div>
+                <div>Quantity</div>
+                <div>Price</div>
             </div>
 
             <div className="flex flex-col gap-2 p-4">
@@ -55,6 +55,7 @@ export const ListItemOrder: React.FC<ListItemOrderProps> = ({
                         quantity={item.quantity}
                         name={item.name}
                         price={item.price}
+                        width="w-full"
                     />
                 ))}
             </div>

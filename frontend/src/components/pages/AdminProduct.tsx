@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { MyButton } from '../UI/MyButton';
 import { MenuHeader } from '../UI/MenuHeader';
 import { ListItem } from '../UI/ListItem';
@@ -8,6 +7,7 @@ import { InputField } from '../UI/InputField';
 import { Search } from '../UI/Search';
 import { ProductServices } from '../../services/ProductServices';
 import { Product } from '../../interfaces/models/Product';
+import { getProductChanges, saveProductChanges, deleteProductChanges} from '../../utils/UserUtils';
 
 export const AdminProduct: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -33,6 +33,35 @@ export const AdminProduct: React.FC = () => {
         onClick: () => void;
     }>>([]);
 
+    useEffect(() => {
+        const product = getProductChanges();
+        if (product) {
+            setProductId(product.id);
+            setProductName(product.name || '');
+            setPrice(product.price || 0);
+            setDescription(product.description || '');
+            setQuantity(product.quantity || 0);
+            setImage(product.img || '');
+        }
+    handleSearch();
+    }, []);
+
+    useEffect(() => {
+        const saveChanges = () => {
+            if (productName !== '' || price !== 0 || quantity !== 0 || description !== '' || image !== '') {
+                saveProductChanges({
+                    id: productId,
+                    name: productName,
+                    price: price,
+                    quantity: quantity,
+                    description: description,
+                    img: image
+                });
+            }
+        };
+
+        saveChanges();
+    }, [productId, productName, price, quantity, description, image]);
     const handleProductClick = async (productId: number) => {
         try {
             const response = await ProductServices.getById(productId.toString());
@@ -51,7 +80,9 @@ export const AdminProduct: React.FC = () => {
 
     const handleSearch = async () => {
         try {
+            console.log(searchValue);
             const products = await ProductServices.getAll(searchValue);
+            console.log(products);
             const mappedItems = products.data.map((product: Product) => ({
                 id: product.id,
                 src: product.img || 'logo.png',
@@ -146,13 +177,8 @@ export const AdminProduct: React.FC = () => {
             console.error('Error deleting product:', error);
         }
     };
-
-    useEffect(() => {
-        handleSearch();
-    }, []);
-
     return (
-        <div className="h-screen w-full flex flex-col items-center gap-4 p-4 bg-[#F6ECE7] overflow-hidden">
+        <div className="h-screen w-full flex flex-col items-center gap-4 p-4 bg-[#F6ECE7]">
             <MenuHeader label="Admin Products" buttons={headerButtons} />
             
             <div className="w-full max-w-7xl flex justify-center mb-2">
@@ -163,26 +189,26 @@ export const AdminProduct: React.FC = () => {
                 />
             </div>
 
-            <div className="w-full max-w-8xl flex flex-col lg:flex-row gap-4 h-[calc(100vh-200px)]">
-                <div className="w-full lg:w-1/2 overflow-auto">
+            <div className="w-full max-w-8xl flex flex-col lg:flex-row">
+                <div className="w-full bg-white rounded-lg shadow-lg p-6">
                     <ListItem 
                         items={items}
-                        maxHeight="100%"
+                        maxHeight="calc(100vh - 300px)"
                         maxWidth="100%"
                         position="left"
                         className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3"
                     />
                 </div>
 
-                <div className="w-full lg:w-1/2 flex flex-col gap-3 overflow-auto">
+                <div className="w-full lg:w-1/2 flex flex-col gap-3 overflow-auto" style={{ maxHeight: '100%', overflowY: 'auto' }}>
                     <CartTitle 
                         title="Product Management" 
                         width="100%"
                         fontSize="1.5rem"
                     />
                     
-                    <div className="flex flex-col gap-3 bg-[#F56F18] p-4 rounded-lg shadow-md items-center">
-                        <div className="flex flex-col items-center gap-3">
+                    <div className="flex flex-col gap-3 bg-[#F56F18] p-4 rounded-lg shadow-md items-center w-full overflow-auto">
+                        <div className="flex flex-col items-center gap-3 w-full">
                             <input 
                                 type="file"
                                 ref={fileInputRef}
@@ -193,72 +219,89 @@ export const AdminProduct: React.FC = () => {
                             <MyButton
                                 name={image ? "Change Image" : "Upload Image"}
                                 onClick={() => fileInputRef.current?.click()}
-                                width="200px"
+                                width="100%"
                             />
                         </div>
 
-                        <div className="w-[400px] flex flex-col gap-3">
+                        <div className="w-full flex flex-col gap-3">
                             <InputField
                                 label="Product ID"
                                 value={productId.toString()}
                                 onChange={(e) => setProductId(Number(e.target.value))}
                                 type="number"
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                                 disabled={true}
                             />
 
                             <InputField
                                 label="Name"
                                 value={productName}
-                                onChange={(e) => setProductName(e.target.value)}
+                                onChange={(e) => {
+                                    setProductName(e.target.value);
+                                }}
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
                             
                             <InputField
                                 label="Price"
                                 value={price.toString()}
-                                onChange={(e) => setPrice(Number(e.target.value))}
+                                onChange={(e) => {
+                                    setPrice(Number(e.target.value));
+                                }}
                                 type="number"
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
                             
                             <InputField
                                 label="Quantity"
                                 value={quantity.toString()}
-                                onChange={(e) => setQuantity(Number(e.target.value))}
+                                onChange={(e) => {
+                                    setQuantity(Number(e.target.value));
+                                }}
                                 type="number"
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
 
                             <InputField
                                 label="Description" 
                                 value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                onChange={(e) => {
+                                    setDescription(e.target.value);
+                                }}
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
 
-                            <div className="flex flex-col gap-2 items-center mt-4">
+                            <div className="flex flex-col gap-2 items-center mt-4 w-full">
                                 <MyButton
                                     name="Add Product"
-                                    onClick={handleAddProduct}
-                                    width="200px"
+                                    onClick={() => {
+                                        handleAddProduct();
+                                        deleteProductChanges();
+                                    }}
+                                    width="100%"
                                 />
 
                                 <MyButton
                                     name="Save Product"
-                                    onClick={handleSaveProduct}
-                                    width="200px"
+                                    onClick={() => {
+                                        handleSaveProduct();
+                                        deleteProductChanges();
+                                    }}
+                                    width="100%"
                                 />
                                 
                                 <MyButton
                                     name="Remove"
-                                    onClick={() => handleDeleteProduct(productId.toString())}
-                                    width="200px"
+                                    onClick={() => {
+                                        handleDeleteProduct(productId.toString());
+                                        deleteProductChanges();
+                                    }}
+                                    width="100%"
                                 />
                             </div>
                         </div>
@@ -268,3 +311,4 @@ export const AdminProduct: React.FC = () => {
         </div>
     );
 };
+

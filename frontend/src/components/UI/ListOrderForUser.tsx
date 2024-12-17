@@ -19,7 +19,7 @@ interface ListOrderForUserProps {
 export const ListOrderForUser: React.FC<ListOrderForUserProps> = ({ 
     items,
     maxHeight = "500px",
-    maxWidth = "1200px",
+    maxWidth = "100%",
     position = "center",
     className = ''
 }) => {
@@ -36,13 +36,13 @@ export const ListOrderForUser: React.FC<ListOrderForUserProps> = ({
         >
             <div className="flex flex-row items-center justify-between px-4 py-4 bg-gray-100 rounded-t-lg mb-4 -ml-[10px]">
                 <div className="flex flex-row items-center gap-8">
-                    <div className="w-[100px]">
+                    <div className="w-[100px] md:w-[100px]">
                         <span className="text-lg font-bold">Order ID</span>
                     </div>
-                    <div className="w-[200px] gap-x-1 ml-[70px] -translate-x-[10px]">
+                    <div className="w-[200px] md:w-[200px] gap-x-1 ml-[70px] -translate-x-[10px]">
                         <span className="text-lg font-bold">Date</span>
                     </div>
-                    <div className="w-[120px] -translate-x-[90px]">
+                    <div className="w-[120px] md:w-[120px] -translate-x-[90px]">
                         <span className="text-lg font-bold">Status</span>
                     </div>
                 </div>

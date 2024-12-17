@@ -19,8 +19,8 @@ export const ItemCart: React.FC<ItemCartProps> = ({
     quantity,
     Delete,
     Add,
-    width = "800px",
-    height = "50px"
+    width = "100%",
+    height = "auto"
 }) => {
     return (
         <div 
@@ -30,24 +30,25 @@ export const ItemCart: React.FC<ItemCartProps> = ({
                 height: height
             }}
         >
-            <div className="flex flex-row items-center gap-8">
-                <div className="w-[100px]">
-                    <span className="text-base font-medium">#{itemcartid}</span>
+            <div className="flex flex-row items-center justify-between w-full">
+                <div className="flex flex-row items-center gap-4">
+                    <div className="w-[100px] md:w-[100px]">
+                        <span className="text-base font-medium">#{itemcartid}</span>
+                    </div>
+                    <div className="w-full md:w-[150px]">
+                        <span className="text-base font-medium">{name}</span>
+                    </div>
+                    <div className="w-[120px] md:w-[150px]">
+                        <span className="text-base font-medium">${price}</span>
+                    </div>
                 </div>
-                <div className="w-[200px]">
-                    <span className="text-base font-medium">{name}</span>
+                <div className="flex gap-2 items-center">
+                    <MyButton name="-" onClick={() => Delete?.()} width="40px" className="flex items-center justify-center" />
+                    <div className="w-[60px] md:w-[60px] text-center">
+                        <span className="text-base font-medium">{quantity}</span>
+                    </div>
+                    <MyButton name="+" onClick={() => Add?.()} width="40px" className="flex items-center justify-center" />
                 </div>
-                <div className="w-[120px]">
-                    <span className="text-base font-medium">${price}</span>
-                </div>
-            </div>
-
-            <div className="flex gap-2 items-center">
-                <MyButton name="-" onClick={() => Delete?.()} width="40px" className="flex items-center justify-center" />
-                <div className="w-[60px] text-center">
-                    <span className="text-base font-medium">{quantity}</span>
-                </div>
-                <MyButton name="+" onClick={() => Add?.()} width="40px" className="flex items-center justify-center" />
             </div>
         </div>
     );

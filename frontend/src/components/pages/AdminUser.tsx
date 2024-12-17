@@ -7,6 +7,7 @@ import { InputField } from '../UI/InputField';
 import { Search } from '../UI/Search';
 import { UserServices } from '../../services/UserServices';
 import { User } from '../../interfaces/models/User';
+import { deleteUserChanges, getUserChanges, saveUserChanges } from '../../utils/UserUtils';
 
 export const AdminUser: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -35,6 +36,18 @@ export const AdminUser: React.FC = () => {
     ];
 
     useEffect(() => {
+        const user = getUserChanges();
+        if (user) {
+            setUserId(user.id);
+            setName(user.name || '');
+            setPhone(user.phone || '');
+            setAddress(user.address || '');
+            setEmail(user.email || '');
+            setLogin(user.login);
+            setPassword(user.password);
+            setRole(user.role);
+            setAvatar(user.avatar || '');
+        }
         handleSearch();
     }, []);
 
@@ -166,8 +179,14 @@ export const AdminUser: React.FC = () => {
         }
     };
 
+    useEffect(() => {
+        if (name || phone || address || email || login || password) {
+            saveUserChanges({ id: userId, name, phone, address, email, login, password, avatar, role });
+        }
+    }, [userId, name, phone, address, email, login, password, avatar, role]);
+
     return (
-        <div className="h-screen w-full flex flex-col items-center gap-4 p-4 bg-[#F6ECE7] overflow-hidden">
+        <div className="h-screen w-full flex flex-col items-center gap-4 p-4 bg-[#F6ECE7]">
             <MenuHeader label="Admin Users" buttons={headerButtons} />
             
             <div className="w-full max-w-7xl flex justify-center mb-2">
@@ -178,11 +197,11 @@ export const AdminUser: React.FC = () => {
                 />
             </div>
 
-            <div className="w-full max-w-8xl flex flex-col lg:flex-row gap-4 h-[calc(100vh-200px)]">
-                <div className="w-full lg:w-1/2 overflow-auto">
+            <div className="w-full max-w-8xl flex flex-col lg:flex-row">
+                <div className="w-full bg-white rounded-lg shadow-lg p-6">
                     <ListItem 
                         items={items}
-                        maxHeight="100%"
+                        maxHeight="calc(100vh - 300px)"
                         maxWidth="100%"
                         position="left"
                         className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3"
@@ -196,8 +215,8 @@ export const AdminUser: React.FC = () => {
                         fontSize="1.5rem"
                     />
                     
-                    <div className="flex flex-col gap-3 bg-[#F56F18] p-4 rounded-lg shadow-md items-center">
-                        <div className="flex flex-col items-center gap-3">
+                    <div className="flex flex-col gap-3 bg-[#F56F18] p-4 rounded-lg shadow-md items-center w-full">
+                        <div className="flex flex-col items-center gap-3 w-full">
                             <input 
                                 type="file"
                                 ref={fileInputRef}
@@ -208,18 +227,18 @@ export const AdminUser: React.FC = () => {
                             <MyButton
                                 name={avatar ? "Change Avatar" : "Upload Avatar"}
                                 onClick={() => fileInputRef.current?.click()}
-                                width="200px"
+                                width="100%"
                             />
                         </div>
 
-                        <div className="w-[400px] flex flex-col gap-3">
+                        <div className="w-full flex flex-col gap-3">
                             <InputField
                                 label="User ID"
                                 value={userId.toString()}
                                 onChange={() => {}}
                                 type="number"
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                                 disabled={true}
                             />
 
@@ -228,7 +247,7 @@ export const AdminUser: React.FC = () => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
                             
                             <InputField
@@ -236,7 +255,7 @@ export const AdminUser: React.FC = () => {
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
                             
                             <InputField
@@ -244,7 +263,7 @@ export const AdminUser: React.FC = () => {
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
 
                             <InputField
@@ -253,7 +272,7 @@ export const AdminUser: React.FC = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 type="email"
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
 
                             <InputField
@@ -261,7 +280,7 @@ export const AdminUser: React.FC = () => {
                                 value={login}
                                 onChange={(e) => setLogin(e.target.value)}
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
 
                             <InputField
@@ -270,7 +289,7 @@ export const AdminUser: React.FC = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 type="password"
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                             />
 
                             <InputField
@@ -278,27 +297,36 @@ export const AdminUser: React.FC = () => {
                                 value="user"
                                 onChange={() => setRole("user")}
                                 labelWidth="120px"
-                                inputWidth="280px"
+                                inputWidth="100%"
                                 disabled={true}
                             />
 
-                            <div className="flex flex-row gap-2 items-center mt-4">
+                            <div className="flex flex-row gap-2 items-center mt-4 w-full">
                                 <MyButton
                                     name="Add User"
-                                    onClick={handleAddUser}
-                                    width="130px"
+                                    onClick={() => {
+                                        handleAddUser();
+                                        deleteUserChanges();
+                                    }}
+                                    width="100%"
                                 />
 
                                 <MyButton
                                     name="Save User"
-                                    onClick={handleSaveUser}
-                                    width="130px"
+                                    onClick={() => {
+                                        handleSaveUser();
+                                        deleteUserChanges();
+                                    }}
+                                    width="100%"
                                 />
                                 
                                 <MyButton
                                     name="Remove"
-                                    onClick={() => handleDeleteUser(userId.toString())}
-                                    width="130px"
+                                    onClick={() => {
+                                        handleDeleteUser(userId.toString());
+                                        deleteUserChanges();
+                                    }}
+                                    width="100%"
                                 />
                             </div>
                         </div>

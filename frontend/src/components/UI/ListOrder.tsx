@@ -38,11 +38,12 @@ export const ListOrder: React.FC<ListOrderProps> = ({
             className={`flex flex-col overflow-y-auto ${positionClasses[position as keyof typeof positionClasses]} ${className}`}
             style={{ maxHeight, maxWidth }}
         >
-            <div className="grid grid-cols-4 gap-4 px-4 py-3 bg-gray-100 font-bold text-lg">
-                <div className='w-[100px]'>Order ID</div>
-                <div className='w-[200px] -translate-x-[20px]'>Date</div>
-                <div className='w-[120px] -translate-x-[80px]'>Status</div>
-                <div className='w-[100px] -translate-x-[140px]'>User ID</div>
+            <div className="grid grid-cols-5 gap-4 px-4 py-3 bg-gray-100 font-bold text-lg">
+                <div className='w-[10%]'>Order ID</div>
+                <div className='w-[20%]'>Date</div>
+                <div className='w-[15%]'>Status</div>
+                <div className='w-[10%]'>User ID</div>
+                <div className='w-[10%]'></div>
             </div>
 
             <div className="flex flex-wrap gap-4 p-4">

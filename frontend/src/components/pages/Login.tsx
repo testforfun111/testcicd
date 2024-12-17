@@ -50,8 +50,8 @@ export const Login: React.FC = () => {
     };
     
     return (
-        <div className="flex gap-20  bg-[#F6ECE7]">
-            <div className="flex  flex-col items-center gap-6">
+        <div className="flex gap-20 bg-[#F6ECE7] flex-wrap justify-center items-center">
+            <div className="flex flex-col items-center gap-6 max-w-[400px] h-[500px] p-8 rounded-lg shadow-md">
                 <InfoStore 
                     imageUrl="/logo3.png"
                     label="Welcome to MyStore!"
@@ -60,7 +60,7 @@ export const Login: React.FC = () => {
                     name="Register"
                     onClick={() => navigate('/register')}
                     height="40px"
-                    width="300px"
+                    width="100%"
                 />
             </div>
             <div className="bg-[#F56F18] w-[400px] h-[500px] p-8 rounded-lg shadow-md flex flex-col gap-6">
@@ -101,6 +101,7 @@ export const Login: React.FC = () => {
                 <MyButton
                     name="Sign In"
                     onClick={handleSignIn}
+                    width="100%" // Adjusted to ensure the button spans the full width on mobile devices
                 />
             </div>
         </div>

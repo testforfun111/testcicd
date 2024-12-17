@@ -28,10 +28,10 @@ export const OrderForUser: React.FC<ItemOrderProps> = ({
                 onClick={onClick}
             >
                 <div className="flex flex-row items-center gap-8">
-                    <div className="w-[100px]">
+                    <div className="w-[100px] md:w-[100px]">
                         <span className="text-base font-medium">{orderid}</span>
                     </div>
-                    <div className="flex-1 text-center w-[200px]">
+                    <div className="flex-1 text-center w-[200px] md:w-[200px]">
                         <span className="text-base font-medium">{date}</span>
                     </div>
                     <div className="flex-1 flex justify-center items-center">

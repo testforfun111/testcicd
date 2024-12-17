@@ -8,10 +8,10 @@ import { ItemCartServices } from '../../services/ItemCartServices';
 import { CartServices } from '../../services/CartServices';
 import { ProductServices } from '../../services/ProductServices';
 import { OrderServices } from '../../services/OrderServices';
+import { ItemOrderServices } from '../../services/ItemOrderServices';
 import { getUser } from '../../utils/UserUtils';
 import { Cart } from '../../interfaces/models/Cart';
 import { ItemCart } from '../../interfaces/models/ItemCart';
-import { ItemOrderServices } from '../../services/ItemOrderServices';
 import { Error } from '../UI/Error';
 
 export const UserCart: React.FC = () => {
@@ -178,12 +178,12 @@ export const UserCart: React.FC = () => {
     const total = cartItems.reduce((total, item) => total + (item.price), 0);
 
     return (
-        <div className="h-screen w-full flex flex-col items-center gap-4 p-4 bg-[#F6ECE7] overflow-hidden">
+        <div className="h-screen w-full flex flex-col items-center gap-4 p-4 bg-[#F6ECE7]">
             {error && <Error message={error} onClick={() => setError('')} />}
             <MenuHeader label={currentUser.name || ''} buttons={headerButtons} />
 
-            <div className="w-full max-w-7xl flex flex-row gap-4">
-                <div className="w-3/4">
+            <div className="w-full max-w-7xl flex flex-col gap-4 md:flex-row">
+                <div className="w-full md:w-3/4">
                     <CartTitle 
                         title="Shopping Cart" 
                         width="100%"
@@ -204,7 +204,7 @@ export const UserCart: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="w-1/4">
+                <div className="w-full md:w-1/4">
                     <CartTitle 
                         title="Order Summary" 
                         width="100%"

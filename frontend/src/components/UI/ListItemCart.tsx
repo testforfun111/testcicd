@@ -19,7 +19,7 @@ interface ListItemProps {
 export const ListItemCart: React.FC<ListItemProps> = ({ 
     items,
     maxHeight = "500px",
-    maxWidth = "1200px",
+    maxWidth = "100%",
     position = "center",
     className = ''
 }) => {
@@ -35,10 +35,10 @@ export const ListItemCart: React.FC<ListItemProps> = ({
             style={{ maxHeight, maxWidth }}
         >
             <div className="grid grid-cols-4 gap-4 px-4 py-3 bg-gray-100 font-bold text-lg">
-                <div className='w-[100px]'>ID</div>
-                <div className='w-[200px] -translate-x-[70px]'>Product</div>
-                <div className='w-[120px] -translate-x-[60px]'>Price</div>
-                <div className='w-[100px] -translate-x-[00px]'>Quantity</div>
+                <div className='w-[100px] md:w-[100px]'>ID</div>
+                <div className='w-[200px] md:w-[200px]'>Product</div>
+                <div className='w-[120px] md:w-[120px]'>Price</div>
+                <div className='w-[100px] md:w-[100px]'>Quantity</div>
             </div>
 
             <div className="flex flex-wrap gap-4 p-4">
@@ -51,6 +51,7 @@ export const ListItemCart: React.FC<ListItemProps> = ({
                         quantity={item.quantity}
                         Delete={item.Delete}
                         Add={item.Add}
+                        width="100%" // Added width prop
                     />
                 ))}
             </div>

@@ -22,7 +22,7 @@ export const MyButton: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
       style={{ height, width }}
-      className={`bg-[#A06945] gap-40 hover:bg-[#A06945]/80 text-white px-6 py-2 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`bg-[#A06945] hover:bg-[#A06945]/80 text-white px-6 py-2 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     >
       <span className="text-center">{name}</span>
     </button>

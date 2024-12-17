@@ -1,13 +1,15 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { SignInDto, RawUserDto, User } from "../interfaces/models/User";
-import { deleteJwtToken, getJwtToken } from "../utils/UserUtils";
+import {getJwtToken } from "../utils/UserUtils";
 import { API } from "./Api";
 import { deleteUser, setUser } from "../utils/UserUtils";
 
 export class UserServices {
     public static async signIn(credentials: SignInDto) {
         const res = await API.get('/users/login', {params: credentials});
-
+        console.log(res);
+        // console.log(res.data.token);
+        // setJwtToken(res.data.token);
         setUser(res.data);
         return res;
     }
@@ -35,7 +37,7 @@ export class UserServices {
     }
 
     public static logout() {
-        deleteJwtToken();
+        // deleteJwtToken();
         deleteUser();
     }
 }

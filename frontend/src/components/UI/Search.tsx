@@ -10,10 +10,10 @@ export interface SearchProps {
 
 export const Search: React.FC<SearchProps> = ({value, onChange, onClick, placeholder = "Search..."}) => {
   return (
-    <div className="relative flex items-center w-[32rem]">
+    <div className="relative flex items-center w-full md:w-[32rem]">
       <input 
         type="text"
-        className="w-[32rem] px-4 py-2 pl-4 pr-12 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full md:w-[32rem] px-4 py-2 pl-4 pr-12 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={value}
         onChange={onChange}
         placeholder={placeholder}

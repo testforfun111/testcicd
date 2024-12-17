@@ -17,7 +17,7 @@ interface ListItemProps {
 export const ListItem: React.FC<ListItemProps> = ({ 
     items,
     maxHeight = "500px",
-    maxWidth = "1200px",
+    maxWidth = "100%",
     position = "center",
     className = ''
 }) => {

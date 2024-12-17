@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "start": "vite",
       "test": "jest --config jest.config.cjs",
       "test:watch": "jest --watch --config jest.config.cjs",
       "test:coverage": "jest --coverage --config jest.config.cjs"

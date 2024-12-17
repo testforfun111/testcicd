@@ -11,7 +11,7 @@ export const Item: React.FC<ItemProps> = ({ src, name, onClick }) => {
     return (
         <div 
             onClick={onClick}
-            className="w-[10rem] h-[12rem] flex flex-col items-center justify-between p-2 hover:bg-gray-50 cursor-pointer transition-colors rounded-lg"
+            className="w-full md:w-[10rem] h-[12rem] flex flex-col items-center justify-between p-2 hover:bg-gray-50 cursor-pointer transition-colors rounded-lg"
             role="button"
             tabIndex={0}
         >
